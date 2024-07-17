@@ -65,6 +65,7 @@ io.on("connection", async (socket) => {
 
     await createConnectedUser({ data: data })
 
+    socket.emit("updateUsers", { data: data });
     socket.to(data.to).emit("messageTo", { data: data });
 
   });

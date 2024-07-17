@@ -15,12 +15,13 @@ const createConnectedUser = async ({ data }) => {
 
       await firstConnectUser.save()
     }
+
     else {
       firstConnectUser.connectedUser.push({
         name: secondUser.name,
         phone: secondUser.phone,
         _id: to,
-        messages: message
+        messages: message,
       })
 
       await firstConnectUser.save()
@@ -32,6 +33,7 @@ const createConnectedUser = async ({ data }) => {
 
     if (foundConnectedUser) {
       foundConnectedUser.messages.push(message)
+      foundConnectedUser.newMessages.push(message)
 
       await secondConnectUser.save()
     }
@@ -40,7 +42,8 @@ const createConnectedUser = async ({ data }) => {
         name: firstUser.name,
         phone: firstUser.phone,
         _id: from,
-        messages: message
+        messages: message,
+        newMessages: message
       })
 
       await secondConnectUser.save()
@@ -55,7 +58,7 @@ const createConnectedUser = async ({ data }) => {
       name: secondUser.name,
       phone: secondUser.phone,
       _id: to,
-      messages: message
+      messages: message,
     })
 
     await firstNewuser.save()
@@ -71,7 +74,8 @@ const createConnectedUser = async ({ data }) => {
       name: firstUser.name,
       phone: firstUser.phone,
       _id: from,
-      messages: message
+      messages: message,
+      newMessages: message
     })
     await secondNewuser.save()
 

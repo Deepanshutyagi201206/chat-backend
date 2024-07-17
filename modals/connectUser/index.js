@@ -23,8 +23,9 @@ const connectedUser = new mongoose.Schema({
     type: String,
   },
   messages: [messageSchema],
-  
-}, {timestamps: true})
+  newMessages: [messageSchema],
+
+}, { timestamps: true })
 
 const connectUserSchema = new mongoose.Schema({
   _id: {
