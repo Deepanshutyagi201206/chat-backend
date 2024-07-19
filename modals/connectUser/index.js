@@ -10,6 +10,15 @@ const messageSchema = new mongoose.Schema({
   userId: {
     type: String,
   },
+  isSent: {
+    type: Boolean,
+  },
+  isDelivered: {
+    type: Boolean,
+  },
+  isRead: {
+    type: Boolean,
+  },
 });
 
 const connectedUser = new mongoose.Schema({

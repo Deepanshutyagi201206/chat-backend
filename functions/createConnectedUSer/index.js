@@ -77,6 +77,7 @@ const createConnectedUser = async ({ data }) => {
       messages: message,
       newMessages: message
     })
+    
     await secondNewuser.save()
 
   }
