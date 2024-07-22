@@ -1,6 +1,9 @@
 const { mongoose } = require("../../db");
 
 const messageSchema = new mongoose.Schema({
+  _id: {
+    type: String
+  },
   message: {
     type: String,
   },
@@ -46,3 +49,4 @@ const connectUserSchema = new mongoose.Schema({
 const ConnectUserModel = mongoose.model("connectUser", connectUserSchema);
 
 module.exports = ConnectUserModel;
+

@@ -1,4 +1,4 @@
-const { ConnectUserModel, SignUpModel } = require("../../modals");
+const { ConnectUserModel, SignUpModel, MessagesModel } = require("../../modals");
 
 const createConnectedUser = async ({ data }) => {
   const { from, to, message } = data;
@@ -7,11 +7,29 @@ const createConnectedUser = async ({ data }) => {
   const firstUser = await SignUpModel.findById(from)
   const secondUser = await SignUpModel.findById(to)
 
+  const messages = await MessagesModel.findOne({ users: [from, to] })
+
+  let messageId
+
+  if (messages) {
+    messages.messages.push(message)
+
+    messageId = (await messages.save())._id
+  }
+  else {
+    const createdMessage = await MessagesModel.create({
+      users: [from, to],
+      messages: message
+    })
+
+    messageId = createdMessage._id
+  }
+
   if (firstConnectUser) {
     const foundConnectedUser = firstConnectUser.connectedUser.id(to)
 
     if (foundConnectedUser) {
-      foundConnectedUser.messages.push(message)
+      foundConnectedUser.messages.push({ _id: messageId, ...message })
 
       await firstConnectUser.save()
     }
@@ -21,7 +39,7 @@ const createConnectedUser = async ({ data }) => {
         name: secondUser.name,
         phone: secondUser.phone,
         _id: to,
-        messages: message,
+        messages: { _id: messageId, ...message },
       })
 
       await firstConnectUser.save()
@@ -32,8 +50,8 @@ const createConnectedUser = async ({ data }) => {
     const foundConnectedUser = secondConnectUser.connectedUser.id(from)
 
     if (foundConnectedUser) {
-      foundConnectedUser.messages.push(message)
-      foundConnectedUser.newMessages.push(message)
+      foundConnectedUser.messages.push({ _id: messageId, ...message })
+      foundConnectedUser.newMessages.push({ _id: messageId, ...message })
 
       await secondConnectUser.save()
     }
@@ -42,8 +60,8 @@ const createConnectedUser = async ({ data }) => {
         name: firstUser.name,
         phone: firstUser.phone,
         _id: from,
-        messages: message,
-        newMessages: message
+        messages: { _id: messageId, ...message },
+        newMessages: { _id: messageId, ...message }
       })
 
       await secondConnectUser.save()
@@ -58,7 +76,7 @@ const createConnectedUser = async ({ data }) => {
       name: secondUser.name,
       phone: secondUser.phone,
       _id: to,
-      messages: message,
+      messages: { _id: messageId, ...message },
     })
 
     await firstNewuser.save()
@@ -74,10 +92,10 @@ const createConnectedUser = async ({ data }) => {
       name: firstUser.name,
       phone: firstUser.phone,
       _id: from,
-      messages: message,
-      newMessages: message
+      messages: { _id: messageId, ...message },
+      newMessages: { _id: messageId, ...message }
     })
-    
+
     await secondNewuser.save()
 
   }
