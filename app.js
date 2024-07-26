@@ -63,10 +63,24 @@ io.on("connection", async (socket) => {
 
   socket.on("message", async (data) => {
 
-    await createConnectedUser({ data: data })
+    const savedMessage = await createConnectedUser({ data: data })
 
     socket.emit("updateUsers", { data: data });
-    socket.to(data.to).emit("messageTo", { data: data });
+    socket.to(data.to).emit("messageTo", { data: savedMessage });
+
+  });
+
+  socket.on("read", async (data) => {
+
+    socket.to(data.from).emit("read", { data: data });
+
+  });
+
+  socket.on("deivered", async (data) => {
+
+    console.log("delivered", data)
+
+    // socket.to(data.from).emit("deivered", { data: data });
 
   });
 

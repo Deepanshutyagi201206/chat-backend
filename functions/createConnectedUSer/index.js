@@ -10,11 +10,18 @@ const createConnectedUser = async ({ data }) => {
   const messages = await MessagesModel.findOne({ users: [from, to] })
 
   let messageId
+  let savedMessage
 
   if (messages) {
-    messages.messages.push(message)
+    const savedMessageIndex = messages.messages.push(message)
 
-    messageId = (await messages.save())._id
+    const savedMessagesRes = await messages.save()
+
+    const savedMessageRes = savedMessagesRes.messages[savedMessageIndex - 1]
+
+    messageId = savedMessageRes._id
+    savedMessage = savedMessageRes
+
   }
   else {
     const createdMessage = await MessagesModel.create({
@@ -22,7 +29,10 @@ const createConnectedUser = async ({ data }) => {
       messages: message
     })
 
-    messageId = createdMessage._id
+    const savedMessageRes = createdMessage.messages[0]
+
+    messageId = savedMessageRes._id
+    savedMessage = savedMessageRes
   }
 
   if (firstConnectUser) {
@@ -100,7 +110,7 @@ const createConnectedUser = async ({ data }) => {
 
   }
 
-  return
+  return savedMessage
 }
 
 module.exports = createConnectedUser;

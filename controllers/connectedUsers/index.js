@@ -6,8 +6,6 @@ const connectedUsers = async (req, res) => {
 
     const connectedUsers = user?.connectedUser.sort((a, b) => b.updatedAt - a.updatedAt)
 
-    console.log("connecteduser", connectedUsers)
-
     return res.status(200).send({
       users: connectedUsers,
     });
