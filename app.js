@@ -66,21 +66,22 @@ io.on("connection", async (socket) => {
     const savedMessage = await createConnectedUser({ data: data })
 
     socket.emit("updateUsers", { data: data });
-    socket.to(data.to).emit("messageTo", { data: savedMessage });
+    socket.to(data.to).emit("messageTo", { data: { savedMessage, from: data.from, to: data.to } });
 
   });
 
   socket.on("read", async (data) => {
+    console.log("read", data)
 
-    socket.to(data.from).emit("read", { data: data });
+    socket.to(data.userId).emit("read", { data: data });
 
   });
 
-  socket.on("deivered", async (data) => {
+  socket.on("delivered", async (data) => {
 
     console.log("delivered", data)
 
-    // socket.to(data.from).emit("deivered", { data: data });
+    socket.to(data.userId).emit("deliveredMessage", { data: data });
 
   });
 

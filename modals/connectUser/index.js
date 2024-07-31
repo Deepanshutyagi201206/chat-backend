@@ -15,12 +15,15 @@ const messageSchema = new mongoose.Schema({
   },
   isSent: {
     type: Boolean,
+    default: false
   },
   isDelivered: {
     type: Boolean,
+    default: false
   },
   isRead: {
     type: Boolean,
+    default: false
   },
 });
 
